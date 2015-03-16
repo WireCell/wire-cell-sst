@@ -1,0 +1,8 @@
+#+TITLE: Wire Cell Simple Simulation Tree Support
+
+* What's here
+
+This package provides support for reading Chao's simple simulation tree (SST) for use in Wire Cell analysis code.
+
+
+
