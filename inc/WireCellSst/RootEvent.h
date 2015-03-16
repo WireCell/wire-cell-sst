@@ -1,12 +1,16 @@
 #ifndef WIRECELLSST_ROOTEVENT_H
 #define WIRECELLSST_ROOTEVENT_H
 
+#include "TClonesArray.h"
 #include <vector>
-class TClonesArray;
 
 namespace WireCellSst{
 
     struct RootEvent {
+	RootEvent();
+	~RootEvent();
+	
+
 	int number;
 	int run;
 	int subrun;

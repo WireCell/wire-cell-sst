@@ -13,11 +13,11 @@ namespace WireCellSst {
      */
     class FrameDataSource : public WireCellNav::FrameDataSource {
 	mutable TTree* tree;	// or TChain
-	WireCellSst::RootEvent* event;
+	WireCellSst::RootEvent event;
 	int index;
 
       public:
-	FrameDataSource(TTree& tree, const char *name = "Sim");
+	FrameDataSource(TTree& tree);
 	virtual ~FrameDataSource();
 
 	/// Return the number of frames this data source knows about.  Return -1 if unlimited.

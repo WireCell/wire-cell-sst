@@ -1,12 +1,26 @@
 #include "WireCellSst/FrameDataSource.h"
 
-WireCellSst::FrameDataSource::FrameDataSource(TTree& ttree, const char *name)
+#include "TClonesArray.h"
+#include "TH1F.h"
+
+WireCellSst::FrameDataSource::FrameDataSource(TTree& ttree)
     : WireCellNav::FrameDataSource()
     , tree(&ttree)
-    , event(0)
+    , event()
     , index(-1)
 {
-    tree->SetBranchAddress("event", &event);
+    // sigh, we can't do things this simply because the ttree does not
+    // have a single branch.  
+    // tree->SetBranchAddress(name, &event);
+
+    tree->SetBranchAddress("eventNo" , &event.number);
+    tree->SetBranchAddress("runNo"   , &event.run);
+    tree->SetBranchAddress("subRunNo", &event.subrun);
+
+    tree->SetBranchAddress("calib_nChannel", &event.nchannels);
+    tree->SetBranchAddress("calib_channelId", &event.channelid);
+    tree->SetBranchAddress("calib_wf", &event.signal);
+
 }
 
 WireCellSst::FrameDataSource::~FrameDataSource()
@@ -40,7 +54,22 @@ int WireCellSst::FrameDataSource::next()
 
 int WireCellSst::FrameDataSource::get(WireCellData::Frame& frame) const
 {
-    return -1;
+    for (size_t ind=0; ind<event.channelid->size(); ++ind) {
+	int chid = event.channelid->at(ind);
+	TH1F* signal = dynamic_cast<TH1F*>(event.signal->At(ind));
+	if (!signal) {
+	    return -1;
+	}
+
+	WireCellData::Trace trace;
+	trace.chid = chid;
+	trace.tbin = 0;		// full readout, if zero suppress this would be non-zero
+	for (int ibin=1; ibin <= signal->GetNbinsX(); ++ibin) {
+	    trace.charge.push_back(signal->GetBinContent(ibin));
+	}
+	frame.push_back(trace);
+    }
+    return index;
 }
 
 
