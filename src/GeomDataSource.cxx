@@ -1,19 +1,20 @@
 #include "WireCellSst/GeomDataSource.h"
+#include "WireCellData/Units.h"
 
-#include <fstream>
 #include <string>
 #include <sstream>
+#include <cassert>
 
-WireCellSst::GeomDataSource::GeomDataSource(const char* geometry_filename)
+using namespace units;
+
+WireCellSst::GeomDataSource::GeomDataSource(std::istream& geo)
 {
-    std::ifstream geo(geometry_filename);
-    if (!geo.is_open()) { 
-	return; 
-    }
 
-    WireCell::Wire wire;
     std::string line;
     while (std::getline(geo, line)) {
+	if (! line.size()) {
+	    continue;
+	}
 	if (line[0] == '#') {
 	    continue;
 	}
@@ -22,11 +23,16 @@ WireCellSst::GeomDataSource::GeomDataSource(const char* geometry_filename)
 
 	float sx, sy, sz, ex, ey, ez;
 	int plane;
+	WireCell::Wire wire;
 	iss >> wire.channel >> plane >> wire.index
 	    >> sx >> sy >> sz >> ex >> ey >> ez;
+
+	assert (wire.index >= 0);
+
+	wire.ident = (plane+1)*10000 + wire.index;
 	wire.plane = static_cast<WireCell::WirePlaneType_t>(plane);
-	wire.point1 = WireCell::Point(sx,sy,sz);
-	wire.point2 = WireCell::Point(ex,ey,ez);
+	wire.point1 = WireCell::Point(sx*cm,sy*cm,sz*cm);
+	wire.point2 = WireCell::Point(ex*cm,ey*cm,ez*cm);
 	this->add_wire(wire);
     }
 }

@@ -3,11 +3,20 @@
 
 #include "WireCellNav/GeomDataSource.h"
 
+#include <istream>
+
 namespace WireCellSst {
+
+    /**
+       WireCellSst::GeomDataSource - read in a Channel Wire Geometry database.
+
+       
+     */
 
     class GeomDataSource : public WireCell::GeomDataSource {
     public:
-	GeomDataSource(const char* geometry_filename);
+	/// Read from an input stream containing content from ChannelWireGeometry.txt
+	GeomDataSource(std::istream& data);
 	virtual ~GeomDataSource();
     };
 
