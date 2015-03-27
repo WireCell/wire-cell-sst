@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 	      << " frames from " << tpath 
 	      << " in " << root_file << std::endl;
 
-    WireCellData::Frame frame;
+    WireCell::Frame frame;
 
     for (size_t iframe=0; iframe<fds.size(); ++iframe) {
 
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 	std::cerr << "Frame " << iframe << " has " << frame.size() << " traces" << std::endl;
 
 	for (size_t itrace=0; itrace < frame.size(); ++itrace) {
-	    WireCellData::Trace& trace = frame[itrace];
+	    WireCell::Trace& trace = frame[itrace];
 
 	    std::cerr << "Frame: " << iframe
 		      << " Trace:" << itrace

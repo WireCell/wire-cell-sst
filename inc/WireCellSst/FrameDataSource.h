@@ -11,7 +11,7 @@ namespace WireCellSst {
     /**
        
      */
-    class FrameDataSource : public WireCellNav::FrameDataSource {
+    class FrameDataSource : public WireCell::FrameDataSource {
 	mutable TTree* tree;	// or TChain
 	WireCellSst::RootEvent event;
 	int index;
@@ -30,7 +30,7 @@ namespace WireCellSst {
 	virtual int next();
 
 	/// Fill full frame with current frame data, returning it's number
-	virtual int get(WireCellData::Frame& frame) const;
+	virtual int get(WireCell::Frame& frame) const;
 
     };
 

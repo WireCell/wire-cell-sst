@@ -4,6 +4,7 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
+#pragma link C++ namespace WireCellSst;
 #pragma link C++ class WireCellSst::RootEvent;
 #pragma link C++ class WireCellSst::FrameDataSource;
 

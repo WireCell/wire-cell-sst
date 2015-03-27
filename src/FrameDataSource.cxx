@@ -4,7 +4,7 @@
 #include "TH1F.h"
 
 WireCellSst::FrameDataSource::FrameDataSource(TTree& ttree)
-    : WireCellNav::FrameDataSource()
+    : WireCell::FrameDataSource()
     , tree(&ttree)
     , event()
     , index(-1)
@@ -52,7 +52,7 @@ int WireCellSst::FrameDataSource::next()
     return jump(index);
 }
 
-int WireCellSst::FrameDataSource::get(WireCellData::Frame& frame) const
+int WireCellSst::FrameDataSource::get(WireCell::Frame& frame) const
 {
     for (size_t ind=0; ind<event.channelid->size(); ++ind) {
 	int chid = event.channelid->at(ind);
@@ -61,7 +61,7 @@ int WireCellSst::FrameDataSource::get(WireCellData::Frame& frame) const
 	    return -1;
 	}
 
-	WireCellData::Trace trace;
+	WireCell::Trace trace;
 	trace.chid = chid;
 	trace.tbin = 0;		// full readout, if zero suppress this would be non-zero
 	for (int ibin=1; ibin <= signal->GetNbinsX(); ++ibin) {
