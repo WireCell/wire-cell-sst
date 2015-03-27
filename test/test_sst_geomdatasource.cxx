@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cmath>
 
 using namespace WireCell;
 using namespace std;
@@ -79,7 +80,21 @@ int main()
 		++errors;
 	    }
 	    cout << "Wire: id=" << wire.ident << " plane=" << wire.plane << " index=" << wire.index << endl;
+
+
 	}
+
+	float pitch = gds.pitch(plane);
+	cout << "pitch=" << pitch/units::mm << " mm" << endl;
+	if (isnan(pitch)) {
+	    cerr << "Got NaN for pitch for plane " << plane << endl;
+	    ++errors;
+	}
+	if (std::abs(pitch-3*units::mm) > 0.01*units::mm) {
+	    cerr << "Got wrong pitch for plane " << plane << ": " << pitch << endl;
+	    ++errors;
+	}
+
     }
 
     if (errors) {
