@@ -14,7 +14,6 @@ namespace WireCellSst {
     class FrameDataSource : public WireCell::FrameDataSource {
 	mutable TTree* tree;	// or TChain
 	WireCellSst::RootEvent event;
-	int index;
 
       public:
 	FrameDataSource(TTree& tree);
@@ -25,12 +24,6 @@ namespace WireCellSst {
 
 	/// Explicitly set the "frame" (event) to process.  Frame number returned or -1 on error.
 	virtual int jump(int frame_number);
-
-	/// Advance to next frame, return frame number or -1 on error, -2 on end of frames
-	virtual int next();
-
-	/// Fill full frame with current frame data, returning it's number
-	virtual int get(WireCell::Frame& frame) const;
 
     };
 

@@ -7,7 +7,6 @@ WireCellSst::FrameDataSource::FrameDataSource(TTree& ttree)
     : WireCell::FrameDataSource()
     , tree(&ttree)
     , event()
-    , index(-1)
 {
     // sigh, we can't do things this simply because the ttree does not
     // have a single branch.  
@@ -34,42 +33,44 @@ int WireCellSst::FrameDataSource::size() const
 
 int WireCellSst::FrameDataSource::jump(int frame_number)
 {
-    if (index == frame_number) {
+    if (frame.index == frame_number) {
+	return frame_number;
+    }
+
+    frame.clear();		// win or lose, we start anew
+
+    if (frame_number < 0) {	// underflow
 	return frame_number;
     }
 
     int siz = tree->GetEntry(frame_number);
-    if (siz>0) {
-	index = frame_number;
-	return frame_number;
+    if (siz <= 0 ) {
+	return -1;
     }
-    return -1;
-}
 
-int WireCellSst::FrameDataSource::next()
-{
-    index += 1;
-    return jump(index);
-}
+    if (frame_number >= siz) {
+	return -1;
+    }
 
-int WireCellSst::FrameDataSource::get(WireCell::Frame& frame) const
-{
-    for (size_t ind=0; ind<event.channelid->size(); ++ind) {
-	int chid = event.channelid->at(ind);
+    // load into frame
+    int nchannels = event.channelid->size();
+    for (size_t ind=0; ind < nchannels; ++ind) {
 	TH1F* signal = dynamic_cast<TH1F*>(event.signal->At(ind));
 	if (!signal) {
 	    return -1;
 	}
 
 	WireCell::Trace trace;
-	trace.chid = chid;
+	trace.chid = event.channelid->at(ind);
+
 	trace.tbin = 0;		// full readout, if zero suppress this would be non-zero
 	for (int ibin=1; ibin <= signal->GetNbinsX(); ++ibin) {
 	    trace.charge.push_back(signal->GetBinContent(ibin));
 	}
-	frame.push_back(trace);
+	frame.traces.push_back(trace);
     }
-    return index;
+    frame.index = frame_number;
+    return frame.index;
 }
 
 

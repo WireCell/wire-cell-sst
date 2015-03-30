@@ -33,8 +33,6 @@ int main(int argc, char** argv)
 	      << " frames from " << tpath 
 	      << " in " << root_file << std::endl;
 
-    WireCell::Frame frame;
-
     for (size_t iframe=0; iframe<fds.size(); ++iframe) {
 
 	if (fds.jump(iframe) < 0) {
@@ -42,16 +40,11 @@ int main(int argc, char** argv)
 	    return 3;
 	}
 
-	frame.clear();
-	if (fds.get(frame) < 0) {
-	    std::cerr << "Failed to get frame " << iframe << std::endl;
-	    return 4;
-	}
+	const WireCell::Frame& frame = fds.get();
+	std::cerr << "Frame " << iframe << " has " << frame.traces.size() << " traces" << std::endl;
 
-	std::cerr << "Frame " << iframe << " has " << frame.size() << " traces" << std::endl;
-
-	for (size_t itrace=0; itrace < frame.size(); ++itrace) {
-	    WireCell::Trace& trace = frame[itrace];
+	for (size_t itrace=0; itrace < frame.traces.size(); ++itrace) {
+	    const WireCell::Trace& trace = frame.traces[itrace];
 
 	    std::cerr << "Frame: " << iframe
 		      << " Trace:" << itrace
