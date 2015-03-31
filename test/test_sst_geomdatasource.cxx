@@ -54,7 +54,8 @@ int main()
 4807 2 9         -0.6 -115.53  3          -0.6 117.47 3)";
 
     istringstream iss(data);
-    WireCellSst::GeomDataSource gds(iss);
+    WireCellSst::GeomDataSource gds;
+    gds.load(iss);
 
     int errors = 0;
     

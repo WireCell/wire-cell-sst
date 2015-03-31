@@ -16,8 +16,11 @@ namespace WireCellSst {
     class GeomDataSource : public WireCell::GeomDataSource {
     public:
 	/// Read from an input stream containing content from ChannelWireGeometry.txt
-	GeomDataSource(std::istream& data);
+	GeomDataSource(const char* filename=0);
 	virtual ~GeomDataSource();
+
+	void load(std::istream& data);
+
     };
 
 } 

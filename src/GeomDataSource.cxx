@@ -4,10 +4,21 @@
 #include <string>
 #include <sstream>
 #include <cassert>
+#include <fstream>
 
 using namespace units;
 
-WireCellSst::GeomDataSource::GeomDataSource(std::istream& geo)
+
+WireCellSst::GeomDataSource::GeomDataSource(const char* filename)
+    : WireCell::GeomDataSource()
+{
+    if (filename) {
+	std::ifstream geotext(filename);
+	this->load(geotext);
+    }
+}
+
+void WireCellSst::GeomDataSource::load(std::istream& geo)
 {
 
     std::string line;
