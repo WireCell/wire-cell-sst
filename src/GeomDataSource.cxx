@@ -33,18 +33,18 @@ void WireCellSst::GeomDataSource::load(std::istream& geo)
 	std::istringstream iss(line);
 
 	float sx, sy, sz, ex, ey, ez;
-	int plane;
-	WireCell::Wire wire;
-	iss >> wire.channel >> plane >> wire.index
+	int iplane, channel, index;
+
+	iss >> channel >> iplane >> index
 	    >> sx >> sy >> sz >> ex >> ey >> ez;
+	assert (index >= 0);
 
-	assert (wire.index >= 0);
+	int ident = (iplane+1)*10000 + index;
+	WireCell::WirePlaneType_t plane = static_cast<WireCell::WirePlaneType_t>(iplane);
 
-	wire.ident = (plane+1)*10000 + wire.index;
-	wire.plane = static_cast<WireCell::WirePlaneType_t>(plane);
-	wire.point1 = WireCell::Point(sx*cm,sy*cm,sz*cm);
-	wire.point2 = WireCell::Point(ex*cm,ey*cm,ez*cm);
-	this->add_wire(wire);
+	this->add_wire(WireCell::GeomWire(ident, plane, index, channel,
+					  WireCell::Point(sx*cm,sy*cm,sz*cm),
+					  WireCell::Point(ex*cm,ey*cm,ez*cm)));
     }
 }
 	

@@ -61,29 +61,31 @@ int main()
     
     for (int iplane = 0; iplane < 3; ++iplane) {
 	WirePlaneType_t plane = static_cast<WirePlaneType_t>(iplane);
-	WireSelection ws = gds.wires_in_plane(plane);
+	GeomWireSelection ws = gds.wires_in_plane(plane);
 	if (! ws.size()) {
 	    cerr << "Got empty wire selection." << endl;
 	    ++errors;
 	}
 	sort_by_planeindex(ws);
 	for (size_t ind=0; ind<ws.size(); ++ind) {
-	    const Wire& wire = *ws[ind];
-	    if (wire.plane != plane) {
+	    const GeomWire& wire = *ws[ind];
+	    if (wire.plane() != plane) {
 		cerr << "Got wrong plane" << endl;
 		++errors;
 	    }
-	    if (wire.ident < 0) {
-		cerr << "Bogus wire ID, id=" << wire.ident << " plane=" << wire.plane << " index=" << wire.index << endl;
+	    if (wire.ident() < 0) {
+		cerr << "Bogus wire ID: " << wire 
+		     << " plane=" << wire.plane() << " index=" << wire.index() << endl;
 		++errors;
 	    }
-	    if (wire.index < 0) {
-		cerr << "Bogus wire index, id=" << wire.ident << " plane=" << wire.plane << " index=" << wire.index << endl;
+	    if (wire.index() < 0) {
+		cerr << "Bogus wire index: " << wire 
+		     << " plane=" << wire.plane() << " index=" << wire.index() << endl;
 		++errors;
 	    }
-	    cout << "Wire: id=" << wire.ident << " plane=" << wire.plane << " index=" << wire.index << endl;
 
-
+	    cout << "Wire: " << wire 
+		 << " plane=" << wire.plane() << " index=" << wire.index() << endl;
 	}
 
 	float pitch = gds.pitch(plane);
