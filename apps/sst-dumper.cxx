@@ -1,4 +1,5 @@
-#include "WireCellSst/FrameDataSource.h"
+#include "WireCellNav/FrameDataSource.h"
+#include "WireCellNav/SimDataSource.h"
 #include "WireCellSst/Util.h"
 #include "WireCellData/Trace.h"
 #include "WireCellData/SimTruth.h"
@@ -18,10 +19,24 @@ int main(int argc, char** argv)
 	tpath = argv[2];
     }
 
-    WireCellSst::FrameDataSource* fds = WireCellSst::make_fds(root_file_name);
+    // Note, we could cheat and just make an SST version of the FDS
+    // and then get direct access to its SDS mixing facet, but let's
+    // pretend to do things proper.
+    //WireCellSst::FrameDataSource* fds = 0;
+
+    //
+    WireCell::FrameDataSource* fds = 0;
+
+    fds = WireCellSst::make_fds(root_file_name);
     if (!fds) {
 	std::cerr << "ERROR: failed to get FDS from " << root_file_name << std::endl;
 	return 1;
+    }
+
+    WireCell::SimDataSource* sds = dynamic_cast<WireCell::SimDataSource*>(fds);
+    if (!sds) {
+	std::cerr << "ERROR: the FDS is not also an SDS " << std::endl;
+	return 2;
     }
 
     std::cerr << "Got " << fds->size() 
@@ -50,7 +65,7 @@ int main(int argc, char** argv)
 
 	}
 	
-	WireCell::SimTruthSelection sts = fds->truth();
+	WireCell::SimTruthSelection sts = sds->truth();
 	std::cerr << "Got " << sts.size() << " true hits" << std::endl;
 	for (size_t itruth = 0; itruth < sts.size(); ++itruth) {
 	    const WireCell::SimTruth* st = sts[itruth];
