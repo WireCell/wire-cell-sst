@@ -3,6 +3,9 @@
 #include "TClonesArray.h"
 #include "TH1F.h"
 
+#include <iostream>		// debug
+
+
 WireCellSst::FrameDataSource::FrameDataSource(TTree& ttree)
     : WireCell::FrameDataSource()
     , event_tree(&ttree)
@@ -70,6 +73,7 @@ int WireCellSst::FrameDataSource::jump(int frame_number)
 	trace.tbin = 0;		// full readout, if zero suppress this would be non-zero
 	for (int ibin=1; ibin <= signal->GetNbinsX(); ++ibin) {
 	    trace.charge.push_back(signal->GetBinContent(ibin));
+	    //std::cerr << ibin << " " << signal->GetBinContent(ibin) << std::endl;
 	}
 	frame.traces.push_back(trace);
     }
