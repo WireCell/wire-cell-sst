@@ -21,6 +21,7 @@ namespace WireCellSst {
 
 	void load(std::istream& data);
 
+
     };
 
 } 
