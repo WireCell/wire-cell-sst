@@ -73,14 +73,6 @@ int main(int argc, char** argv)
 	const WireCell::Channel::Group& cg1 = slice1.group();
 	const WireCell::Channel::Group& cg2 = slice2.group();
 
-	if (cg1.size() != cg2.size()) {
-	    cerr << "Channel::Group size mismatch:" << endl
-		 << "sds1 has " << cg1.size() << endl
-		 << "sds2 has " << cg2.size() << endl;
-	    return 4;
-	}
-
-
 	float qtot1=0, qtot2=0;
 	for (int ich=0; ich<cg1.size(); ++ich) {
 	    qtot1 += cg1[ich].second;
@@ -94,7 +86,25 @@ int main(int argc, char** argv)
 	    return 5;
 	}
 
-	cerr << "slice " << ind << " has " << cg1.size() << " hit wires with charge " << qtot1 << endl;
+	cerr << "slice " << ind << ", #1 has " << qtot1 << " on " << cg1.size() << " channels" << endl;
+	cerr << "slice " << ind << ", #2 has " << qtot2 << " on " << cg2.size() << " channels" << endl;
+
+
+	if (cg1.size() != cg2.size()) { // maybe this should be a mismatch?
+	    cerr << "Channel::Group size mismatch:" << endl
+		 << "sds1 has " << cg1.size() << " hit channels" << endl
+		 << "sds2 has " << cg2.size() << " hit channels" << endl;
+	    // for (int ick=0; ick<cg1.size(); ++ick) {
+	    // 	cerr << " " << cg1[ick].first;
+	    // }
+	    // cerr << endl;
+	    // for (int ick=0; ick<cg2.size(); ++ick) {
+	    // 	cerr << " " << cg2[ick].first;
+	    // }
+	    // cerr << endl;
+	    return 4;
+	}
+
 
     }
 
