@@ -87,6 +87,9 @@ int WireCellSst::ToyuBooNESliceDataSource::jump(int index)
     _slice_index = index;	
     int slice_tbin = _slice_index + _slices_begin; 
     Channel::Group slice_group;
+    
+    //int sum = 0;
+
 	
     const Frame& frame = _fds.get();
     size_t ntraces = frame.traces.size();
@@ -104,10 +107,13 @@ int WireCellSst::ToyuBooNESliceDataSource::jump(int index)
 
 	// Save association of a channel ID and its charge.
 	int q = trace.charge[slice_tbin];
-	if (q>threshold)
+	if (q>threshold){
 	  slice_group.push_back(Channel::Charge(trace.chid, q));
+	  //  sum += q;
+	}
     }
     _slice.reset(slice_tbin, slice_group);
+    //std::cout << sum << std::endl;
     return index;
 }
 
