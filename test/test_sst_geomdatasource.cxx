@@ -88,12 +88,12 @@ int main()
 		 << " plane=" << wire.plane() << " index=" << wire.index() << endl;
 	}
 
-	float pitch = gds.pitch(plane);
-	float angle = gds.angle(plane);
+	double pitch = gds.pitch(plane);
+	double angle = gds.angle(plane);
 	cout << "pitch=" << pitch/units::mm << " mm"
 	     <<" angle=" << angle/units::degree << " degree"
 	     << endl;
-	if (isnan(pitch)) {
+	if (std::isnan(pitch)) {
 	    cerr << "FAIL: got NaN for pitch for plane " << plane << endl;
 	    ++errors;
 	}
@@ -112,7 +112,7 @@ int main()
 	}
 
 	for (int mmind=0; mmind<3; ++mmind) {
-	    std::pair<float,float> mm = gds.minmax(mmind, plane);
+	    std::pair<double,double> mm = gds.minmax(mmind, plane);
 	    cerr << "plane=" << plane << "[" <<  mmind << "]"
                  << " min=" << mm.first/units::mm << " mm,"
                  << " max=" << mm.second/units::mm << " mm"
@@ -132,7 +132,7 @@ int main()
 
 
     for (int iplane=-1; iplane<3; ++iplane) {
-        std::vector<float> ex = gds.extent((WireCell::WirePlaneType_t)iplane);
+        std::vector<double> ex = gds.extent((WireCell::WirePlaneType_t)iplane);
         cerr << "Extent for plane "<<iplane<<": "
              << " x:" << ex[0]/units::mm << " mm,"
              << " y:" << ex[1]/units::mm << " mm,"
@@ -140,18 +140,18 @@ int main()
              << endl;
     }
 
-    std::vector<float> ex = gds.extent(WireCell::kUnknownWirePlaneType);
+    std::vector<double> ex = gds.extent(WireCell::kUnknownWirePlaneType);
     cerr << "Extent: "
 	 << " x:" << ex[0]/units::mm << " mm,"
 	 << " y:" << ex[1]/units::mm << " mm,"
 	 << " z:" << ex[2]/units::mm << " mm"
 	 << endl;
     // note we are using only a portion of wires, which explains these weird numbers
-    float wantext[] = {6.0*units::mm, 2.33*units::m, 6.19*units::cm};
+    double wantext[] = {6.0*units::mm, 2.33*units::m, 6.19*units::cm};
     for (int ind=0; ind<3; ++ind) {
-        std::pair<float,float> mm = gds.minmax(ind);
+        std::pair<double,double> mm = gds.minmax(ind);
 
-	float normed = std::abs(ex[ind] + wantext[ind]);
+	double normed = std::abs(ex[ind] + wantext[ind]);
         if (normed) {
             normed = std::abs(ex[ind] - wantext[ind]) / normed;
         }
