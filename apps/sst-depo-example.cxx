@@ -3,9 +3,10 @@
 #include "WireCellNav/SimDataSource.h"
 #include "WireCellNav/GenerativeFDS.h"
 #include "WireCellNav/SimTruthDepositor.h"
+#include "WireCellNav/GeomDataSource.h"
 
 #include "WireCellSst/Util.h"
-#include "WireCellSst/GeomDataSource.h"
+#include "WireCellSst/GeomWireReader.h"
 
 #include <iostream>
 
@@ -17,8 +18,9 @@ int main(int argc, char** argv)
 	std::cerr << "usage: sst-depo-example geom_file.txt celltree_file.root" << std::endl;
 	return 1;
     }
-    const char* geom_file_name = argv[1];
-    WireCellSst::GeomDataSource gds(geom_file_name);
+    WireCellSst::GeomWireReader reader(argv[1]);
+    WireCell::GeomDataSource gds;
+    gds.use_wires(reader);
 
     const char* root_file_name = argv[2];
     WireCell::FrameDataSource* fds1 = WireCellSst::make_fds(root_file_name);
