@@ -19,20 +19,24 @@ void dump(const IFrame::pointer &frame)
 {
     ITrace::shared_vector traces = frame->traces();
 
-    cerr << "Frame " << frame->ident() << " @ t=" << frame->time()/units::second << "s with " << traces->size() << endl;
-
+    double qtot = 0.0;
     for (auto trace : *traces) {
 	const ITrace::ChargeSequence& charges = trace->charge();
-	int nonzero = count_nonzero(charges);
-	if (!nonzero) { continue; }
-	cerr << " chid:" << trace->channel()
-	     << " tbin:" << trace->tbin()
-	     << " #bins:" << charges.size()
-	     << " nonzero:" << nonzero
-	     << endl;
+	for (auto q : charges) {
+	    qtot += q;
+	}
+	// 	int nonzero = count_nonzero(charges);
+	// 	if (!nonzero) { continue; }
+	// 	cerr << " chid:" << trace->channel()
+	// 	     << " tbin:" << trace->tbin()
+	// 	     << " #bins:" << charges.size()
+	// 	     << " nonzero:" << nonzero
+	// 	     << endl;
+	// }
     }
+
+    cerr << "Frame " << frame->ident() << " @ t=" << frame->time()/units::second << "s with " << traces->size() << " traces, 3*qtot=" << qtot << endl;
 }
-    
 
 int main(int argc, char** argv)
 {

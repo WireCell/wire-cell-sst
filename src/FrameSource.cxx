@@ -99,8 +99,11 @@ bool WireCellSst::FrameSource::extract(IFrame::pointer& frame)
 
     }
 
+    // This data is too stupid and wasteful to encode an absolute time
+    // or a tick length so we make up some crap.
     double time = (1+frame_number)*units::second;
-    SimpleFrame* sframe = new SimpleFrame(frame_number, time, traces);
+    double tick = 0.5*units::microsecond;
+    SimpleFrame* sframe = new SimpleFrame(frame_number, time, traces, tick);
     frame = IFrame::pointer(sframe);
     return true;
 }
