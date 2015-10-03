@@ -20,10 +20,14 @@ void dump(const IFrame::pointer &frame)
     ITrace::shared_vector traces = frame->traces();
 
     double qtot = 0.0;
+    int ntot = 0;
     for (auto trace : *traces) {
 	const ITrace::ChargeSequence& charges = trace->charge();
 	for (auto q : charges) {
 	    qtot += q;
+	    if (q > 0.0) {
+		++ntot;
+	    }
 	}
 	// 	int nonzero = count_nonzero(charges);
 	// 	if (!nonzero) { continue; }
@@ -35,7 +39,7 @@ void dump(const IFrame::pointer &frame)
 	// }
     }
 
-    cerr << "Frame " << frame->ident() << " @ t=" << frame->time()/units::second << "s with " << traces->size() << " traces, 3*qtot=" << qtot << endl;
+    cerr << "Frame " << frame->ident() << " @ t=" << frame->time()/units::second << "s with " << traces->size() << " traces, 3*qtot=" << qtot << ", " << ntot << " q>0" << endl;
 }
 
 int main(int argc, char** argv)
