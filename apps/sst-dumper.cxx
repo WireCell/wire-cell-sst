@@ -1,4 +1,5 @@
 #include "WireCellSst/FrameSource.h"
+#include "WireCellSst/DepoSource.h"
 #include "WireCellUtil/Testing.h"
 #include "WireCellUtil/Units.h"
 
@@ -42,21 +43,15 @@ void dump(const IFrame::pointer &frame)
     cerr << "Frame " << frame->ident() << " @ t=" << frame->time()/units::second << "s with " << traces->size() << " traces, 3*qtot=" << qtot << ", " << ntot << " q>0" << endl;
 }
 
-int main(int argc, char** argv)
+void dump(const IDepo::pointer& depo)
 {
-    if (argc < 1) {
-	cerr << "usage: test_dump celltree_file.root [TDirectory/path]" << endl;
-	return 1;
-    }
-    const char* root_file_name = argv[1];
+    cerr << "Depo t=" << depo->time() << " q=" << depo->charge() << " pos=" << depo->pos() << endl;
+}
 
-    const char* tpath = "/Event/Sim";
-    if (argc > 2) {
-	tpath = argv[2];
-    }
-
+void dump_frame(const char* root_file_name, const char* tpath)
+{
     WireCellSst::FrameSource fs(root_file_name, tpath);
-    cerr << "Loaded: " << root_file_name << " " << tpath << endl;
+    cerr << "FrameSource loaded: " << root_file_name << " " << tpath << endl;
 
     while (true) {
 	IFrame::pointer frame;
@@ -66,6 +61,44 @@ int main(int argc, char** argv)
 	}
 	dump(frame);
     }
+}
+
+void dump_depos(const char* root_file_name, const char* tpath)
+{
+    WireCellSst::DepoSource ds(root_file_name, tpath);
+    cerr << "DepoSource loaded: " << root_file_name << " " << tpath << endl;
+    
+    while (true) {
+	IDepo::pointer depo;
+	Assert(ds.extract(depo));
+	if (!depo) {
+	    break;
+	}
+	dump(depo);
+    }
+}
+
+int main(int argc, char** argv)
+{
+    if (argc < 3) {
+	cerr << "usage: test_dump what|all celltree_file.root [TDirectory/path]" << endl;
+	return 1;
+    }
+    string what(argv[1]);
+    const char* root_file_name = argv[2];
+
+    const char* tpath = "/Event/Sim";
+    if (argc > 3) {
+	tpath = argv[3];
+    }
+
+    if (what == "all" || what == "frame") {
+	dump_frame(root_file_name, tpath);
+    }
+    if (what == "all" || what == "depo") {
+	dump_depos(root_file_name, tpath);
+    }
+
 
     return 0;
 }

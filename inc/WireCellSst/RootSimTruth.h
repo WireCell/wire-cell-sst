@@ -1,8 +1,9 @@
 #ifndef WIRECELLSST_ROOTSIMTRUTH_H
 #define WIRECELLSST_ROOTSIMTRUTH_H
 
-#include "TClonesArray.h"
+#include "TTree.h"
 #include <vector>
+
 
 namespace WireCellSst{
 
@@ -23,6 +24,7 @@ namespace WireCellSst{
 	~RootSimTruth();
 
 	void clear();
+	void graphf(TTree& tree);
 
     };
 }

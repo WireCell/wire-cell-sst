@@ -1,6 +1,7 @@
 #ifndef WIRECELLSST_ROOTEVENT_H
 #define WIRECELLSST_ROOTEVENT_H
 
+#include "TTree.h"
 #include "TClonesArray.h"
 #include <vector>
 
@@ -17,6 +18,10 @@ namespace WireCellSst{
 	int nchannels;
 	std::vector<int> *channelid;
 	TClonesArray* signal;
+
+	void clear();
+	void graphf(TTree& tree);
+	
     };
 }
 
