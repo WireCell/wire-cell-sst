@@ -59,14 +59,14 @@ void WireCellSst::WireSource::load(std::istream& geotext)
 	SimpleWire* wire = new SimpleWire(wpid, ident, index, channel, ray, segment);
 	wires->push_back(IWire::pointer(wire));
     }
-    m_wires = output_type(wires);
+    m_wires = output_pointer(wires);
 }
 
 WireCellSst::WireSource::~WireSource()
 {
 }
 
-bool WireCellSst::WireSource::extract(output_type& wires)
+bool WireCellSst::WireSource::extract(output_pointer& wires)
 {
     wires = m_wires;
     return true;
