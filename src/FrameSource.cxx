@@ -39,7 +39,7 @@ WireCellSst::FrameSource::~FrameSource()
     m_tree = 0;
 }
 
-bool WireCellSst::FrameSource::extract(IFrame::pointer& frame)
+bool WireCellSst::FrameSource::operator()(IFrame::pointer& frame)
 {
     if (m_entry < 0) {		// past EOS
 	cerr << "FrameSource past EOS";

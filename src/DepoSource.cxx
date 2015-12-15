@@ -18,7 +18,7 @@ WireCellSst::DepoSource::~DepoSource()
     delete m_reader;
     m_reader = nullptr;
 }
-bool WireCellSst::DepoSource::extract(WireCell::IDepo::pointer& depo)
+bool WireCellSst::DepoSource::operator()(WireCell::IDepo::pointer& depo)
 {
     if (!m_cache) {
 	m_cache = m_reader->next();
@@ -28,12 +28,12 @@ bool WireCellSst::DepoSource::extract(WireCell::IDepo::pointer& depo)
 	}
 	m_index=-1;
 	++m_count;
-	return extract(depo);
+	return (*this)(depo);
     }
     ++m_index;
     if (m_index >= m_cache->x->size()) {
 	m_cache = nullptr;
-	return extract(depo);
+	return (*this)(depo);
     }
     SimpleDepo* mydepo = new SimpleDepo(m_count*units::second, // celltree has no actual time
 					Point(m_cache->x->at(m_index),

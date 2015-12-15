@@ -17,7 +17,7 @@ namespace WireCellSst {
 	void load(const char* filename);
 	void load(std::istream& geotext);
 	virtual ~WireSource();
-	virtual bool extract(output_pointer& wires);	
+	virtual bool operator()(output_pointer& wires);	
     private:
 	output_pointer m_wires;
     };

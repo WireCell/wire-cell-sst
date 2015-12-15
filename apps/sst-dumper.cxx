@@ -55,7 +55,7 @@ void dump_frame(const char* root_file_name, const char* tpath)
 
     while (true) {
 	IFrame::pointer frame;
-	Assert(fs.extract(frame));
+	Assert(fs(frame));
 	if (!frame) {
 	    break;
 	}
@@ -70,7 +70,7 @@ void dump_depos(const char* root_file_name, const char* tpath)
     
     while (true) {
 	IDepo::pointer depo;
-	Assert(ds.extract(depo));
+	Assert(ds(depo));
 	if (!depo) {
 	    break;
 	}

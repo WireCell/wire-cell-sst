@@ -14,7 +14,7 @@ namespace WireCellSst {
 	DepoSource(const char* filename,
 		   const char* treepath = "/Event/Sim");
 	virtual ~DepoSource();
-	virtual bool extract(WireCell::IDepo::pointer& depo);	
+	virtual bool operator()(WireCell::IDepo::pointer& depo);	
     private:
 	DepoReader* m_reader;
 	const RootSimDepo* m_cache;

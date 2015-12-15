@@ -14,7 +14,7 @@ namespace WireCellSst {
 	FrameSource(const char* filename,
 		    const char* treepath = "/Event/Sim");
 	virtual ~FrameSource();
-	virtual bool extract(WireCell::IFrame::pointer& frame);	
+	virtual bool operator()(WireCell::IFrame::pointer& frame);	
     private:
 	WireCellSst::RootEvent m_event;
 	TFile* m_tfile;

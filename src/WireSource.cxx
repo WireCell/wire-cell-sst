@@ -66,7 +66,7 @@ WireCellSst::WireSource::~WireSource()
 {
 }
 
-bool WireCellSst::WireSource::extract(output_pointer& wires)
+bool WireCellSst::WireSource::operator()(output_pointer& wires)
 {
     wires = m_wires;
     return true;

@@ -58,7 +58,7 @@ int main()
     WireCellSst::WireSource ws;
     ws.load(iss);
     IWire::shared_vector wires;
-    Assert(ws.extract(wires));
+    Assert(ws(wires));
     Assert(wires);
     Assert(!wires->empty());
 
