@@ -12,11 +12,31 @@
 using namespace std;
 using namespace WireCell;
 
+WireCellSst::FrameSource::FrameSource()
+    : m_tfile(0)
+    , m_tree(0)
+    , m_entry(0)
+{
+}
 WireCellSst::FrameSource::FrameSource(const char* filename, const char* tpath)
     : m_tfile(0)
     , m_tree(0)
     , m_entry(0)
 {
+    this->open(filename, tpath);
+}
+
+WireCellSst::FrameSource::~FrameSource()
+{
+    this->close();
+}
+
+void WireCellSst::FrameSource::open(const char* filename, const char* tpath)
+{
+    if (m_tfile) {
+	this->close();
+    }
+
     m_tfile = TFile::Open(filename, "READONLY");
     m_tree = dynamic_cast<TTree*>(m_tfile->Get(tpath));
 
@@ -28,16 +48,33 @@ WireCellSst::FrameSource::FrameSource(const char* filename, const char* tpath)
     m_tree->SetBranchAddress("calib_channelId", &m_event.channelid);
     m_tree->SetBranchAddress("calib_wf", &m_event.signal);
 }
-WireCellSst::FrameSource::~FrameSource()
+
+void WireCellSst::FrameSource::close()
 {
-    if (!m_tfile) {
-	return;
+    if (m_tfile) {
+	delete m_tfile;
     }
-    m_tfile->Close();
-    delete m_tfile;
     m_tfile = 0;
     m_tree = 0;
 }
+
+Configuration WireCellSst::FrameSource::default_configuration() const
+{
+    stringstream ss;
+    ss << "{\n"
+       << "\"filename\":\"\",\n"
+       << "\"treepath\":\"/Event/Sim\"\n"
+       << "}\n";
+    return configuration_loads(ss.str(), "json");
+}
+
+void WireCellSst::FrameSource::configure(const Configuration& cfg)
+{
+    auto fname = get<std::string>(cfg, "filename", "");
+    auto tpath = get<std::string>(cfg, "treepath", "/Event/Sim");
+    this->open(fname.c_str(), tpath.c_str());
+}
+
 
 bool WireCellSst::FrameSource::operator()(IFrame::pointer& frame)
 {
