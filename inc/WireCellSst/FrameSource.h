@@ -14,11 +14,13 @@ namespace WireCellSst {
     public:
 	FrameSource();
 	FrameSource(const char* filename,
-		    const char* treepath = "/Event/Sim");
+		    const char* treepath = "/Event/Sim",
+		    const char* source = "calib");// or "raw"
 	virtual ~FrameSource();
 
 	void open(const char* filename,
-		  const char* treepath = "/Event/Sim");
+		  const char* treepath = "/Event/Sim",
+		  const char* source = "calib");
 	void close();
 
 	virtual bool operator()(WireCell::IFrame::pointer& frame);	

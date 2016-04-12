@@ -18,12 +18,12 @@ WireCellSst::FrameSource::FrameSource()
     , m_entry(0)
 {
 }
-WireCellSst::FrameSource::FrameSource(const char* filename, const char* tpath)
+WireCellSst::FrameSource::FrameSource(const char* filename, const char* tpath, const char* source)
     : m_tfile(0)
     , m_tree(0)
     , m_entry(0)
 {
-    this->open(filename, tpath);
+    this->open(filename, tpath, source);
 }
 
 WireCellSst::FrameSource::~FrameSource()
@@ -31,11 +31,14 @@ WireCellSst::FrameSource::~FrameSource()
     this->close();
 }
 
-void WireCellSst::FrameSource::open(const char* filename, const char* tpath)
+void WireCellSst::FrameSource::open(const char* filename, const char* tpath, const char* source)
 {
     if (m_tfile) {
 	this->close();
     }
+
+    // fixme, should check version consistency
+    // https://github.com/BNLIF/wire-cell-celltree/blob/master/data/versions.md
 
     m_tfile = TFile::Open(filename, "READONLY");
     m_tree = dynamic_cast<TTree*>(m_tfile->Get(tpath));
@@ -44,9 +47,9 @@ void WireCellSst::FrameSource::open(const char* filename, const char* tpath)
     m_tree->SetBranchAddress("runNo"   , &m_event.run);
     m_tree->SetBranchAddress("subRunNo", &m_event.subrun);
 
-    m_tree->SetBranchAddress("calib_nChannel", &m_event.nchannels);
-    m_tree->SetBranchAddress("calib_channelId", &m_event.channelid);
-    m_tree->SetBranchAddress("calib_wf", &m_event.signal);
+    m_tree->SetBranchAddress(Form("%s_nChannel", source), &m_event.nchannels);
+    m_tree->SetBranchAddress(Form("%s_channelId", source), &m_event.channelid);
+    m_tree->SetBranchAddress(Form("%s_wf", source), &m_event.signal);
 }
 
 void WireCellSst::FrameSource::close()
@@ -63,7 +66,8 @@ Configuration WireCellSst::FrameSource::default_configuration() const
     stringstream ss;
     ss << "{\n"
        << "\"filename\":\"\",\n"
-       << "\"treepath\":\"/Event/Sim\"\n"
+       << "\"treepath\":\"/Event/Sim\",\n"
+       << "\"source\":\"calib\"\n"
        << "}\n";
     return configuration_loads(ss.str(), "json");
 }
@@ -72,7 +76,8 @@ void WireCellSst::FrameSource::configure(const Configuration& cfg)
 {
     auto fname = get<std::string>(cfg, "filename", "");
     auto tpath = get<std::string>(cfg, "treepath", "/Event/Sim");
-    this->open(fname.c_str(), tpath.c_str());
+    auto source = get<std::string>(cfg, "source", "calib");
+    this->open(fname.c_str(), tpath.c_str(), source.c_str());
 }
 
 
