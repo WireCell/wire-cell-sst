@@ -2,6 +2,7 @@
 #include "WireCellIface/SimpleFrame.h"
 #include "WireCellIface/SimpleTrace.h"
 #include "WireCellUtil/Units.h"
+#include "WireCellUtil/Persist.h"
 
 #include "TFile.h"
 #include "TTree.h"
@@ -69,7 +70,7 @@ Configuration WireCellSst::FrameSource::default_configuration() const
        << "\"treepath\":\"/Event/Sim\",\n"
        << "\"source\":\"calib\"\n"
        << "}\n";
-    return configuration_loads(ss.str(), "json");
+    return Persist::loads(ss.str());
 }
 
 void WireCellSst::FrameSource::configure(const Configuration& cfg)
