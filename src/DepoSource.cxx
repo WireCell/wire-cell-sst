@@ -31,7 +31,7 @@ bool WireCellSst::DepoSource::operator()(WireCell::IDepo::pointer& depo)
 	return (*this)(depo);
     }
     ++m_index;
-    if (m_index >= m_cache->x->size()) {
+    if (m_index >= (int)m_cache->x->size()) {
 	m_cache = nullptr;
 	return (*this)(depo);
     }

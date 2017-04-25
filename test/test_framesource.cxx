@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	     << endl;
 
 	for (auto trace : *traces.get()) {
-	    int tbin = trace->tbin();
+	    //int tbin = trace->tbin();
 	    int ch = trace->channel();
 	    auto charges = trace->charge();
 	    double qsum=0, qsum2=0;

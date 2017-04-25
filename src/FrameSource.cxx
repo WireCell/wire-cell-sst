@@ -119,7 +119,7 @@ bool WireCellSst::FrameSource::operator()(IFrame::pointer& frame)
     ITrace::vector traces;
 
     // load into frame
-    int nchannels = m_event.channelid->size();
+    size_t nchannels = m_event.channelid->size();
     for (size_t ind=0; ind < nchannels; ++ind) {
 	TH1F* signal = dynamic_cast<TH1F*>(m_event.signal->At(ind));
 	if (!signal) {
