@@ -3,6 +3,7 @@
 #include "WireCellIface/SimpleTrace.h"
 #include "WireCellUtil/Units.h"
 #include "WireCellUtil/Persist.h"
+#include "WireCellUtil/Exceptions.h"
 
 #include "TFile.h"
 #include "TTree.h"
@@ -76,6 +77,10 @@ Configuration WireCellSst::FrameSource::default_configuration() const
 void WireCellSst::FrameSource::configure(const Configuration& cfg)
 {
     auto fname = get<std::string>(cfg, "filename", "");
+    if (fname.empty()) {
+        THROW(ValueError() << errmsg{"FrameSource must be configured with a filename"});
+    }
+
     auto tpath = get<std::string>(cfg, "treepath", "/Event/Sim");
     auto source = get<std::string>(cfg, "source", "calib");
     this->open(fname.c_str(), tpath.c_str(), source.c_str());
